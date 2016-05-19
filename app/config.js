@@ -1,40 +1,59 @@
 var path = require('path');
-var knex = require('knex')({
-  client: 'sqlite3',
-  connection: {
-    filename: path.join(__dirname, '../db/shortly.sqlite')
-  },
-  useNullAsDefault: true
-});
-var db = require('bookshelf')(knex);
+//var mongoose = require('mongoose');
+//mongoose.connect('mongodb://localhost:27017/library');
+var bcrypt = require('bcrypt-nodejs');
+var Promise = require('bluebird');
+var crypto = require('crypto');
 
-db.knex.schema.hasTable('urls').then(function(exists) {
-  if (!exists) {
-    db.knex.schema.createTable('urls', function (link) {
-      link.increments('id').primary();
-      link.string('url', 255);
-      link.string('baseUrl', 255);
-      link.string('code', 100);
-      link.string('title', 255);
-      link.integer('visits');
-      link.timestamps();
-    }).then(function (table) {
-      console.log('Created Table', table);
-    });
-  }
-});
 
-db.knex.schema.hasTable('users').then(function(exists) {
-  if (!exists) {
-    db.knex.schema.createTable('users', function (user) {
-      user.increments('id').primary();
-      user.string('username', 100).unique();
-      user.string('password', 100);
-      user.timestamps();
-    }).then(function (table) {
-      console.log('Created Table', table);
-    });
-  }
-});
 
-module.exports = db;
+  
+
+
+// UrlSchema.methods.shortenUrl = function () { 
+//   var shasum = crypto.createHash('sha1');
+//   shasum.update(this.get('url'));
+//   this.set('code', shasum.digest('hex').slice(0, 5));
+// };
+//   // UrlSchema.on('init', function (model) {
+//   //   var shasum = crypto.createHash('sha1');
+//   //   shasum.update(this.get('url'));
+//   //   this.set('code', shasum.digest('hex').slice(0, 5));
+
+//   // });
+
+
+
+
+
+// var Url = mongoose.model('Url', UrlSchema);
+  
+//   var abc = new Url({
+//     url: 'www.abc.com'
+//   });
+// console.log(typeof abc.shortenUrl);  
+
+
+
+// nam.hashPassword();
+// //abc.shortenUrl;
+
+
+// // UserSchema.on('init', function (model) {
+// //   console.log('hello');
+// //   UserSchema.methods.hashPassword(model);
+// // });
+
+
+//   var jay = new User({
+//     username: 'jay jay',
+//     password: '5647'
+//   });
+
+  
+
+//   jay.save().then(console.log).catch(console.log);
+// //};
+
+
+
