@@ -1,9 +1,9 @@
-var path = require('path');
-//var mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost:27017/library');
-var bcrypt = require('bcrypt-nodejs');
-var Promise = require('bluebird');
-var crypto = require('crypto');
+var mongoose = require('mongoose');
+mongoURI = 'mongodb://localhost/libarary';
+mongoose.connect(mongoURI);
+var db = mongoose.connection;
+
+module.exports = db;
 
 
 
