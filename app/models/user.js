@@ -7,52 +7,48 @@ var crypto = require('crypto');
 
 var Schema = mongoose.Schema;
 
-// create an export function to encapsulate the model creation
-//module.exports = function() {
-  // define schema
-  var UserSchema = new Schema({
-    id: Number,
-    username: String,
-    password: String,
-    timestamps: Number
-  
-  });
+var UserSchema = new Schema({
+  id: Number,
+  username: String,
+  password: String,
+  timestamps: Number,
 
-  var UrlSchema = new Schema({
-    id: Number,
-    url: String,
-    baseurl: String,
-    code: Number,
-    title: String,
-    visits: Number,
-    timestamps: Number
-  });
+});
+
+var UrlSchema = new Schema({
+  id: Number,
+  url: String,
+  baseurl: String,
+  code: Number,
+  title: String,
+  visits: Number,
+  timestamps: Number
+});
 
 
-  UserSchema.methods.hashPassword = function(cb) {
-    var cipher = Promise.promisify(bcrypt.hash);
-    return cipher(this.get('password'), null, null).bind(this)
-      .then(function(hash) {
-        this.set('password', hash);
-      });
-  }
-
-  UserSchema.methods.comparePassword = function(attemptedPassword, callback) {
-    bcrypt.compare(attemptedPassword, this.get('password'), function(err, isMatch) {
-      callback(isMatch);
+UserSchema.methods.hashPassword = function(cb) {
+  var cipher = Promise.promisify(bcrypt.hash);
+  return cipher(this.get('password'), null, null).bind(this)
+    .then(function(hash) {
+      this.set('password', hash);
     });
-  }
+}
 
+UserSchema.methods.comparePassword = function(attemptedPassword, callback) {
+  bcrypt.compare(attemptedPassword, this.get('password'), function(err, isMatch) {
+    callback(isMatch);
+  });
+}
+
+UserSchema.pre('save', function (next) {
+  this.hashPassword();
+  return next();
+});
 
 var User = mongoose.model('User', UserSchema);
 
-  var nam = new User({
-  username : 'nam dao',
-  password : '1234'
-  });
+  // Bob.save().then(function(value) {
+  //   console.log('expect success value', value);
+  // }).catch(console.log);
 
-  nam.hashPassword();
-
-  nam.save().then(function(value) {
-    console.log('expect success value', value);
-  }).catch(console.log);
+module.exports = User;

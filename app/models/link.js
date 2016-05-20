@@ -1,17 +1,41 @@
 var db = require('../config');
 var crypto = require('crypto');
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-// var Link = mongoose.model('Link');
-  
-//   var abc = new Link({
-//     url: 'www.nytimes.com'
-//   });
 
-//   abc.save().then(function(value) {
-//     console.log('expect success value', value);
-//   })
+var UrlSchema = new Schema({
+  id: Number,
+  url: String,
+  baseUrl: String,
+  code: String,
+  title: String,
+  visits: Number
+})
 
-//   abc.shortenUrL();
+UrlSchema.methods.shortenUrL = function () {
+  var shasum = crypto.createHash('sha1');
+  shasum.update(this.get('url'));
+  this.set('code', shasum.digest('hex').slice(0, 5));
+}
+
+var Link = mongoose.model('Link', UrlSchema);
+
+UrlSchema.pre('save', function (next) {
+  this.shortenUrL();
+  return next();
+})
+
+module.exports = Link;
+
+// var abc = new Link({
+//   url: 'www.cnn.com'
+// });
+
+// abc.save().then(function(value) {
+//   console.log('expect success value', value);
+// })
+
 
 // module.exports = Link;
 // var Link = db.Model.extend({
